@@ -56,12 +56,22 @@ $(document).ready(function (){
 	$("#contenu").before(jPlus); // insertion dans le DOM 
 	jPlus.after(jT); // ajout champ texte après le bouton 
 
+
+	// 2)  Passage en mode édition des P. insérés 
+	// clic => le P. se transforme en textarea avec le mm contenu 
+	// "ENTREE" => le textarea redevient un P. avec le mm contenu 
+
 	// Réagir aux clicks sur les P. (y compris futurs !) 
 	$(document).on("click","#contenu p", function (){
 		// fonction appelee lors d'un clic sur un P
 		// dans le div de contenu 
 		var contenu = $(this).html(); // recup contenu 
-		var jTa = $("<textarea>").val(contenu); // prépa txtarea
+		var jTa = $("<textarea>")
+					.val(contenu)
+					.data("contenuInitial",contenu); 
+		// prépa txtarea
+		// AJOUT d'une méta-donnée 
+		
 		$(this).replaceWith(jTa); // insertion txtarea
 		jTa.focus(); // .select();
 		
@@ -85,11 +95,33 @@ $(document).ready(function (){
 	}); 
 
 
+	// 3) "ESC" => toutes les éditions en cours sont annulées
+	// les contenus des textarea sont restaurés aux valeurs
+	// initiales - elles avaient été stockées par la méthode .data()
+	// itérer sur un ensemble : $(sel).each(fonction)
+
+	$(document).keyup(function(contexte){
+		if (contexte.which != 27) return;
+
+		// parcours de tous les textarea
+		$("#contenu textarea").each(function(){
+			// $(this) dénote le txtarea en cours de parcours
+			// permet de récupérer le contenu initial 
+			var contenu = $(this).data("contenuInitial") ; 			
+			var jPar = $("<p>").html(contenu); // prépa P
+			$(this).replaceWith(jPar); // insertion P
+		});  
+
+	});
+
+	// DEBUG 
+	$(document).on("mouseover","#contenu *", function(){
+		console.log($(this).data());
+	});
+
 });
 
-	// 2)  Passage en mode édition des P. insérés 
-	// clic => le P. se transforme en textarea avec le mm contenu 
-	// "ENTREE" => le textarea redevient un P. avec le mm contenu 
+
 
 </script>
 
