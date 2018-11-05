@@ -25,19 +25,34 @@ function toggle() {
 		$("input[value='Cacher']").val("Afficher");
 	}
 }
+
+function plus(refBtnPlus){
+	// Plusieurs solutions pour distinguer le bouton du haut de celui du bas : 
+	// les associer à des fonctions différentes
+	// passer des paramètres différents à une unique fonction 
+	// passer 'this' à la fonction et retrouver le numéro du bouton
+	// index renvoie l'indice d'une balise dans un objet jQ
+	// à partir de 0  
+	if($("input[value='+']").index(refBtnPlus) == 1) {
+		// en bas
+		$("#contenu").append("<p>Nouveau</p>"); 
+	} else {
+		// en haut 
+		$("#contenu").prepend("<p>Nouveau</p>"); 
+	}
+}
 </script>
 <body>
 
 <input type="button" value="Afficher" onclick="toggle();"/>
-<input type="button" value="+" onclick="plus();"/>
+<input type="button" value="+" onclick="plus(this);"/>
 <div id="contenu">
 	<p>P1</p>
 	<p>P2</p>
 	<p>P3</p>
 </div>
-
 <input type="button" value="Afficher" onclick="toggle();"/>
-<input type="button" value="+" onclick="plus();"/>
+<input type="button" value="+" onclick="plus(this);"/>
 
 
 </body>
