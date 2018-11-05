@@ -6,6 +6,9 @@
 input[value="+"] {
 	display:none;
 }
+input[type="text"] {
+	display:none;
+}
 </style>
 
 
@@ -17,6 +20,7 @@ input[value="+"] {
 function toggle() {
 	$("#contenu").toggle();
 	$("input[value='+']").toggle();
+	$("input[type='text']").toggle();
 	var btns = $("input[value='Afficher']"); 
 	if (btns.length) {
 		// Il faut afficher
@@ -26,6 +30,10 @@ function toggle() {
 	}
 }
 
+// paragraphe modele 
+// jP est une référence vers cet unique P. 
+var jP = $("<p>").html("Nouveau");
+
 function plus(refBtnPlus){
 	// Plusieurs solutions pour distinguer le bouton du haut de celui du bas : 
 	// les associer à des fonctions différentes
@@ -33,26 +41,37 @@ function plus(refBtnPlus){
 	// passer 'this' à la fonction et retrouver le numéro du bouton
 	// index renvoie l'indice d'une balise dans un objet jQ
 	// à partir de 0  
-	if($("input[value='+']").index(refBtnPlus) == 1) {
+	
+	var jT = $(refBtnPlus); // objet JQ sur le bouton cliqué 
+	//  jT.next() : balise frère suivante 
+	var contenu = jT.next().val();
+	var nextP = jP.clone(); // on duplique le modele 
+	if (contenu != "") nextP.html(contenu);
+	
+	if($("input[value='+']").index(jT) == 1) {
 		// en bas
-		$("#contenu").append("<p>Nouveau</p>"); 
+		$("#contenu").append(nextP); 
 	} else {
 		// en haut 
-		$("#contenu").prepend("<p>Nouveau</p>"); 
+		$("#contenu").prepend(nextP); 
 	}
 }
 </script>
 <body>
 
-<input type="button" value="Afficher" onclick="toggle();"/>
-<input type="button" value="+" onclick="plus(this);"/>
+<div>
+	<input type="button" value="Afficher" onclick="toggle();"/>
+	<input type="button" value="+" onclick="plus(this);"/>
+	<input type="text" />
+</div>
 <div id="contenu">
 	<p>P1</p>
 	<p>P2</p>
 	<p>P3</p>
 </div>
-<input type="button" value="Afficher" onclick="toggle();"/>
-<input type="button" value="+" onclick="plus(this);"/>
-
-
+<div>
+	<input type="button" value="Afficher" onclick="toggle();"/>
+	<input type="button" value="+" onclick="plus(this);"/>
+	<input type="text" />
+</div>
 </body>
