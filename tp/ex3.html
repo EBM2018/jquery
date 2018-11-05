@@ -1,0 +1,52 @@
+<script src="jquery-3.3.1.min.js"></script>
+<style>
+</style>
+
+
+<script>
+
+var jP= $("<p>").html("Nouveau");
+$(document).ready(function (){
+	// traitements d'initialisation
+
+	// 1) ajouter les éléments d'interaction à la page 
+	// Leur structure : <+><input text>
+	var jT = $("<input type='text' />"); 
+	var jPlus = $("<input type='button'/>")
+				.val("+")
+				.click(function(){
+			//  gestionnaire d'évnt sur click sur btn +
+			// ici, $(this) dénote le bouton cliqué 
+			// $(this).next() dénote donc le champ d'entrée texte
+			// $(this).next().val() est son contenu 
+
+			// Récupération du contenu du champ texte			
+			var contenu = $(this).next().val(); 
+			$(this).next().val(""); // puis on le vide 
+
+			// on insère un nouveau P avec ce contenu 
+			var jNextP = jP.clone(); 
+			if (contenu) jNextP.html(contenu);
+			$("#contenu").prepend(jNextP); 
+		});  
+
+	$("#contenu").before(jPlus); // insertion dans le DOM 
+	jPlus.after(jT); // ajout champ texte après le bouton 
+	 
+
+});
+
+/*
+function init() {
+	// traitements d'initalisation 
+}*/
+
+</script>
+
+<body>
+
+<div id="contenu">
+	<p>P1</p>
+</div>
+
+</body>
