@@ -1,0 +1,43 @@
+<script src="jquery-3.3.1.min.js"></script>
+<style>
+#contenu {
+	display:none;
+}
+input[value="+"] {
+	display:none;
+}
+</style>
+
+
+
+
+
+
+<script>
+function toggle() {
+	$("#contenu").toggle();
+	$("input[value='+']").toggle();
+	var btns = $("input[value='Afficher']"); 
+	if (btns.length) {
+		// Il faut afficher
+		btns.val("Cacher");
+	} else {
+		$("input[value='Cacher']").val("Afficher");
+	}
+}
+</script>
+<body>
+
+<input type="button" value="Afficher" onclick="toggle();"/>
+<input type="button" value="+" onclick="plus();"/>
+<div id="contenu">
+	<p>P1</p>
+	<p>P2</p>
+	<p>P3</p>
+</div>
+
+<input type="button" value="Afficher" onclick="toggle();"/>
+<input type="button" value="+" onclick="plus();"/>
+
+
+</body>
