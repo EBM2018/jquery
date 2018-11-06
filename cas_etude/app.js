@@ -11,10 +11,29 @@ var composantBtnP = $("<div>")
     $("<input type='button'/>")
       .val("+")
       .click(function() {
-        var contenu = $(this).next().val();
-        displayNewParagraph().bind(this);
+
+          var contenu = $(this)
+              .next()
+              .val();
+          $(this)
+              .next()
+              .val("");
+          var jNextP = jP.clone();
+          if (contenu) jNextP.html(contenu);
+
+          // la zone d'insertion
+          // dépend de la méta-donnée "top"
+          // portée par le composant
+          if (
+              $(this)
+                  .parent()
+                  .data("top")
+          )
+              $("#contenu").prepend(jNextP);
+          else $("#contenu").append(jNextP);
+
         var ordre = $('p').index(this);
-        addParagraph(ordre, contenu);
+        addParagraph(ordre, jNextP.html());
       })
   )
   .append($("<input type='text' />"));
