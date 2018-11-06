@@ -33,7 +33,7 @@ var mockParagraphs = function() {
 };
 var displayParagraphs = function(data) {
   console.log("récupération des paragraphes de la bdd", data);
-  data.paragraphs.forEach(paragraph => {
+  data.paragraphes.forEach(paragraph => {
     $("#contenu").append($("<p>").html(paragraph.contenu));
   });
 };
