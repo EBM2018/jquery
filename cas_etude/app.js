@@ -19,7 +19,7 @@ var composantBtnP = $("<div>")
 
 var getParagraphs = function() {
   return $.getJSON(
-    "http://www.vahlioncopyright.ebm/jquery/cas_etude/data.php?action=getP"
+    "http://www.vahlioncopyright.ebm/jquery/paragraphes/data.php?action=getP"
   ).then(data => {
     return data;
   });
@@ -82,7 +82,7 @@ $(document).ready(function() {
     );
 
   // récupération des paragraphes de la bdd
-  displayParagraphs(mockParagraphs());
+  displayParagraphs(getParagraphs());
 });
 // 2)  Passage en mode édition des P. insérés
 // clic => le P. se transforme en textarea avec le mm contenu
