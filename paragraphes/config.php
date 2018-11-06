@@ -18,8 +18,8 @@ $BDD_base="paragraphes";
 
 // MACHINE LINUX 
 $BDD_host="localhost";
-$BDD_user="root";
-$BDD_password="mysql";
-$BDD_base="paragraphes";
+$BDD_user="vahlion";
+$BDD_password="administrateur";
+$BDD_base="exercices";
 
 ?>

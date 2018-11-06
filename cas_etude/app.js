@@ -3,6 +3,11 @@
 // suivant une méta-donnée "position"
 
 var jP = $("<div>").html("Nouveau").addClass('p');
+var cross = $("<span>").html('X').addClass('cross').click(function(){
+    var id = $(this).siblings()[0].attr('data-id');
+    debugger;
+});
+var paragraphItem = $('<div>').css('display', 'inline-block');
 
 var composantBtnP = $("<div>")
   .addClass("btnPlus")
@@ -20,8 +25,6 @@ var composantBtnP = $("<div>")
               .val("");
           var jNextP = jP.clone();
           if (contenu) jNextP.html(contenu);
-          var paragraphItem = $('<div>').css('display', 'inline-block');
-          var cross = $("<span>").html('X').addClass('cross').click(deleteParagraph);
           var paragraphNextP = paragraphItem.clone().append(jNextP).append(cross);
           // var paragraphItem = jNextP.append("<span>x</span>")
           // la zone d'insertion
@@ -56,8 +59,11 @@ var mockParagraphs = function() {
 var displayParagraphs = function(data) {
   console.log("récupération des paragraphes de la bdd", data);
   data.paragraphes.forEach(paragraphe => {
+    var pItem = paragraphItem.clone();
+    var crossItem = cross.clone();
     var pToDisplay = $("<p>").html(paragraphe.contenu).attr('data-id', paragraphe.id);
-    $("#contenu").append(pToDisplay);
+    pItem.append(pToDisplay).append(crossItem);
+    $("#contenu").append(pItem);
   });
 };
 
@@ -89,11 +95,6 @@ var addParagraph = function(ordre, contenu) {
   ).then(data => {
     return data;
   });
-}
-
-var deleteParagraph = function() {
-  var id = $(this).siblings()[0].attr('data-id');
-  debugger;
 }
 
 $(document).ready(function() {

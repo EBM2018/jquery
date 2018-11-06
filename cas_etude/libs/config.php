@@ -1,8 +1,8 @@
 <?php
 
 $BDD_host="localhost";
-$BDD_user="root";
-$BDD_password="mysql"; // vide sous windows
-$BDD_base="users"; // nom de la base de données
+$BDD_user="vahlion";
+$BDD_password="administrateur"; // vide sous windows
+$BDD_base="exercices"; // nom de la base de données
 
 ?>
