@@ -1,0 +1,75 @@
+<script src="jquery-3.3.1.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<style>
+
+    #contenu * {
+        padding: 3px;
+        margin: 3px;
+        border: none;
+        resize: none;
+    }
+
+    #contenu textarea {
+        border: 1px solid black;
+    }
+
+    #contenu p:hover {
+        border: 1px dashed black;
+        cursor: pointer;
+    }
+
+    .btnPlus {
+        display: inline;
+    }
+
+    .red * {
+        color: red;
+    }
+
+    .blue * {
+        color: blue;
+    }
+</style>
+
+
+<script>
+
+
+    // TODO : préparer un "composant" boutonPlus
+    // qui insère des P. en position haute ou basse
+    // suivant une méta-donnée "position"
+    $(document).ready(function () {
+        $("#contenu").append('<tr><td>ID</td><td>Contenu</td><td>Ordre</td></tr>');
+
+        var i = 0;
+        $.getJSON("data.php?action=getP", function (data) {
+            for (i in data.paragraphes) {
+                $("#contenu").append('<tr id=' + data.paragraphes[i].id + '><td>' + data.paragraphes[i].id + '</td><td class="contenu">' + data.paragraphes[i].contenu + '</td><td>' + data.paragraphes[i].ordre + '</td></tr>');
+            }
+        });
+    });
+
+    $(document).on("click","#contenu .contenu", function (){
+        // fonction appelee lors d'un clic sur un P
+        // dans le div de contenu
+        var contenu = $(this).html(); // recup contenu
+        var jTa = $("<textarea>")
+            .val(contenu)
+            .data("contenuInitial",contenu);
+        // prépa txtarea
+        // AJOUT d'une méta-donnée
+
+        $(this).replaceWith(jTa); // insertion txtarea
+        jTa.focus(); // .select();
+
+    });
+
+</script>
+
+<body>
+
+<div id="contenu">
+
+</div>
+
+</body>
