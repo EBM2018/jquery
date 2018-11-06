@@ -2,7 +2,7 @@
 // qui insère des P. en position haute ou basse
 // suivant une méta-donnée "position"
 
-var jP = $("<p>").html("Nouveau");
+var jP = $("<div>").html("Nouveau").addClass('p');
 
 var composantBtnP = $("<div>")
   .addClass("btnPlus")
@@ -20,7 +20,10 @@ var composantBtnP = $("<div>")
               .val("");
           var jNextP = jP.clone();
           if (contenu) jNextP.html(contenu);
-
+          var paragraphItem = $('<div>').css('display', 'inline-block');
+          var cross = $("<span>").html('X').addClass('cross').click(deleteParagraph);
+          var paragraphNextP = paragraphItem.clone().append(jNextP).append(cross);
+          // var paragraphItem = jNextP.append("<span>x</span>")
           // la zone d'insertion
           // dépend de la méta-donnée "top"
           // portée par le composant
@@ -29,10 +32,10 @@ var composantBtnP = $("<div>")
                   .parent()
                   .data("top")
           )
-              $("#contenu").prepend(jNextP);
-          else $("#contenu").append(jNextP);
+              $("#contenu").prepend(paragraphNextP);
+          else $("#contenu").append(paragraphNextP);
 
-        var ordre = $('p').index(this);
+        var ordre = $('div.p').index(this);
         addParagraph(ordre, jNextP.html());
       })
   )
@@ -52,8 +55,9 @@ var mockParagraphs = function() {
 };
 var displayParagraphs = function(data) {
   console.log("récupération des paragraphes de la bdd", data);
-  data.paragraphes.forEach(paragraph => {
-    $("#contenu").append($("<p>").html(paragraph.contenu));
+  data.paragraphes.forEach(paragraphe => {
+    var pToDisplay = $("<p>").html(paragraphe.contenu).attr('data-id', paragraphe.id);
+    $("#contenu").append(pToDisplay);
   });
 };
 
@@ -87,6 +91,11 @@ var addParagraph = function(ordre, contenu) {
   });
 }
 
+var deleteParagraph = function() {
+  var id = $(this).siblings()[0].attr('data-id');
+  debugger;
+}
+
 $(document).ready(function() {
   // traitements d'initialisation
 
@@ -110,7 +119,7 @@ $(document).ready(function() {
 // "ENTREE" => le textarea redevient un P. avec le mm contenu
 
 // Réagir aux clicks sur les P. (y compris futurs !)
-$(document).on("click", "#contenu p", function() {
+$(document).on("click", "#contenu div.p", function() {
   // fonction appelee lors d'un clic sur un P
   // dans le div de contenu
   var contenu = $(this).html(); // recup contenu
