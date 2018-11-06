@@ -21,7 +21,7 @@ var getParagraphs = function() {
   return $.getJSON(
     "http://www.vahlioncopyright.ebm/jquery/paragraphes/data.php?action=getP"
   ).then(data => {
-    return data;
+    displayParagraphs(data);
   });
 };
 var mockParagraphs = function() {
@@ -82,7 +82,7 @@ $(document).ready(function() {
     );
 
   // récupération des paragraphes de la bdd
-  displayParagraphs(getParagraphs());
+  getParagraphs();
 });
 // 2)  Passage en mode édition des P. insérés
 // clic => le P. se transforme en textarea avec le mm contenu
