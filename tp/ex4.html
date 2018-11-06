@@ -17,6 +17,11 @@
 	border:1px dashed black; 
 	cursor:pointer;
 }
+.btnPlus {
+	display:inline; 
+}
+.red *{ color:red;}
+.blue *{ color:blue;}
 </style>
 
 
@@ -62,8 +67,15 @@ $(document).ready(function (){
 	// Leur structure : <+><input text>
 
 	$("#contenu")
-		.before(composantBtnP.clone(true))
-		.after(composantBtnP.clone(true).data("top",false)); 
+		.before(composantBtnP
+					.clone(true)
+					.addClass("red")
+		)
+		.after(composantBtnP
+					.clone(true)
+					.addClass("blue")
+					.data("top",false)
+		); 
 
 	// 2)  Passage en mode édition des P. insérés 
 	// clic => le P. se transforme en textarea avec le mm contenu 
@@ -136,6 +148,7 @@ $(document).ready(function (){
 <body>
 
 <div id="contenu">
+
 </div>
 
 </body>
