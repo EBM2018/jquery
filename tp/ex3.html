@@ -37,6 +37,7 @@ $(document).ready(function (){
 	var jT = $("<input type='text' />"); 
 	var jPlus = $("<input type='button'/>")
 				.val("+")
+                .data("positionH", true)
 				.click(function(){
 			//  gestionnaire d'évnt sur click sur btn +
 			// ici, $(this) dénote le bouton cliqué 
@@ -47,15 +48,28 @@ $(document).ready(function (){
 			var contenu = $(this).next().val(); 
 			$(this).next().val(""); // puis on le vide 
 
+
 			// on insère un nouveau P avec ce contenu 
 			var jNextP = jP.clone(); 
-			if (contenu) jNextP.html(contenu);
-			$("#contenu").prepend(jNextP); 
-		});  
+			if (contenu) jNextP.html(contenu)
+			if (jPlus.data("positionH")) {
+			    $("#contenu").prepend(jNextP);
+			    console.log("testPrepend");
+            }
+
+            if(jPlus.data("positionB")) {
+			    $("#contenu").append(jNextP);
+			    console.leg("testAppend");
+			}
+		});
 
 	$("#contenu").before(jPlus); // insertion dans le DOM 
-	jPlus.after(jT); // ajout champ texte après le bouton 
+	jPlus.after(jT); // ajout champ texte après le bouton
 
+    var jPlusNext = jPlus.clone(true).data("positionB", true);
+    var jTNext = jT.clone();
+
+    $("#contenu").before(jPlusNext).before(jTNext);
 
 	// 2)  Passage en mode édition des P. insérés 
 	// clic => le P. se transforme en textarea avec le mm contenu 
