@@ -11,8 +11,10 @@ var composantBtnP = $("<div>")
     $("<input type='button'/>")
       .val("+")
       .click(function() {
-        displayNewParagraph();
-        addParagraph();
+        var contenu = $(this).next().val();
+        displayNewParagraph().bind(this);
+        var ordre = $('p').index(this);
+        addParagraph(ordre, contenu);
       })
   )
   .append($("<input type='text' />"));
@@ -58,9 +60,9 @@ var displayNewParagraph = function() {
   else $("#contenu").append(jNextP);
 };
 
-var addParagraph = function() {
+var addParagraph = function(ordre, contenu) {
   $.getJSON(
-    "http://www.vahlioncopyright.ebm/jquery/cas_etude/data.php?action=getP"
+    `http://www.vahlioncopyright.ebm/jquery/paragraphes/data.php?action=addP&ordre=${ordre}&contenu=${contenu}`
   ).then(data => {
     return data;
   });
