@@ -1,3 +1,4 @@
+
 <script src="jquery-3.3.1.min.js"></script>
 <script src="utils.js"></script>
 <script src="ajax.js"></script>
@@ -12,15 +13,15 @@
     }
     #contenu textarea {
         border:1px solid black;
+        display: inline-block;
     }
     #contenu p:hover {
         border:1px dashed black;
         cursor:pointer;
     }
-    #contenu {display:inline;position:relative;color: black;}
-    #imgLoad{position:absolute;
-        right:5px;top:1px;display:none;
-    }
+    #contenu {color: black;}
+
+
     #saisie{border:1px solid grey;
     }
     #suggestions{border:1px solid gray;padding:0px;
@@ -32,6 +33,17 @@
         cursor:pointer;
         background-color:lightgrey;
     }
+    .croix {
+        display: inline;
+        height: 25px;
+        width: 5px;
+    }
+    .croix:hover {
+        cursor:pointer;
+
+
+    }
+
 </style>
 <script>
 
@@ -43,7 +55,7 @@
         //connexion à la BBD
         $.getJSON("data.php?action=getP", function (data) {
                 for (i in data.paragraphes) {
-                    $("#contenu").prepend('<div id=' + data.paragraphes[i].id + '><p class="contenu">' + data.paragraphes[i].contenu + '</p></div>');
+                    $("#contenu").prepend('<div id=' + data.paragraphes[i].id + '><p class="contenu">' + data.paragraphes[i].contenu + '</p><img src=\'croix.png\' class=\'croix\'/></div>');
                 }
             });
             // 1) ajouter les éléments d'interaction à la page
@@ -69,11 +81,11 @@
                     $.getJSON("data.php?action=addP&ordre=" + $("#contenu p").length + "&contenu=" + contenu);
                 });
             //ajouter en appuyant sur entrer
+            // A FAIRE
+            //
 
             $("#contenu").before(jPlus); // insertion dans le DOM
             jPlus.after(jT); // ajout champ texte après le bouton
-
-
             // 2)  Passage en mode édition des P. insérés
             // clic => le P. se transforme en textarea avec le mm contenu
             // "ENTREE" => le textarea redevient un P. avec le mm contenu
@@ -86,11 +98,12 @@
                 var jTa = $("<textarea>")
                     .val(contenu)
                     .data("contenuInitial", contenu);
+
                 // prépa txtarea
                 // AJOUT d'une méta-donnée
-
                 $(this).replaceWith(jTa); // insertion txtarea
                 jTa.focus(); // .select();
+                var img = $("#contenu").append("");
 
             });
 
@@ -108,7 +121,7 @@
                     var contenu = $(this).val(); // recup contenu
                     if (contenu === '') return false;
                     var idRequest = $(this).parent().attr("id");
-                    var jPar = $("<p class='contenu'>").html(contenu); // prépa P
+                    var jPar = $("<p class='contenu'>").html(contenu);// prépa P
                     $(this).replaceWith(jPar); // insertion P
                     console.log("data.php?action=updateP?id=" + idRequest + "&contenu=" + contenu);
                     $.getJSON("data.php?action=updateP&id=" + idRequest + "&contenu=" + contenu);
@@ -143,6 +156,15 @@
             });
 
         });
+    // suppression P
+    $(document).on("click", ".croix", function () {
+        // fonction appelee lors d'un clic sur la croix
+        // dans le div de contenu
+        var idRequest = $(this).parent().attr("id"); // attribut parent
+        console.log(idRequest);
+        $("#" + idRequest).remove();
+        $.getJSON("data.php?action=delP&id=" + idRequest);
+    });
 
 
 </script>
