@@ -2,10 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="27d46605-f7bf-49f5-8d9d-1cde1fc9c823" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cas_etude/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/cas_etude/app.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cas_etude/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/cas_etude/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cas_etude/libs/config.php" beforeDir="false" afterPath="$PROJECT_DIR$/cas_etude/libs/config.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/paragraphes/config.php" beforeDir="false" afterPath="$PROJECT_DIR$/paragraphes/config.php" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/.tmp/" />
     <ignored path="$PROJECT_DIR$/temp/" />
@@ -20,35 +18,37 @@
     <session id="1012380762">
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.open.time.0" value="1" />
-          <entry key="project.opened" value="1" />
+          <entry key="project.closed" value="2" />
+          <entry key="project.open.time.0" value="2" />
+          <entry key="project.open.time.16" value="1" />
+          <entry key="project.opened" value="3" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
-          <entry key="html" value="1" />
-          <entry key="js" value="1" />
-          <entry key="php" value="3" />
+          <entry key="html" value="2" />
+          <entry key="js" value="2" />
+          <entry key="php" value="4" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
-          <entry key="HTML" value="1" />
-          <entry key="JavaScript" value="1" />
-          <entry key="PHP" value="3" />
+          <entry key="HTML" value="2" />
+          <entry key="JavaScript" value="2" />
+          <entry key="PHP" value="4" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="html" value="3" />
-          <entry key="js" value="186" />
+          <entry key="js" value="682" />
           <entry key="php" value="62" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="HTML" value="3" />
-          <entry key="JavaScript" value="186" />
+          <entry key="JavaScript" value="682" />
           <entry key="PHP" value="62" />
         </counts>
       </usages-collector>
@@ -60,23 +60,16 @@
         <entry file="file://$PROJECT_DIR$/cas_etude/index.html">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="240">
-              <caret line="16" lean-forward="true" selection-start-line="16" selection-end-line="16" />
+              <caret line="16" selection-start-line="16" selection-end-line="16" />
             </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/paragraphes/data.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-275" />
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/cas_etude/app.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="105">
-              <caret line="7" column="13" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
+            <state relative-caret-position="436">
+              <caret line="166" column="30" lean-forward="true" selection-start-line="166" selection-start-column="30" selection-end-line="166" selection-end-column="30" />
               <folding>
                 <element signature="n#!!doc" expanded="true" />
               </folding>
@@ -84,7 +77,20 @@
           </provider>
         </entry>
       </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/paragraphes/data.php">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-500" />
+          </provider>
+        </entry>
+      </file>
     </leaf>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>clone</find>
+      <find>console.log</find>
+    </findStrings>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
@@ -105,11 +111,18 @@
     <detection-done>true</detection-done>
     <sorting>DEFINITION_ORDER</sorting>
   </component>
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="69" />
+    <option name="y" value="27" />
+    <option name="width" value="1833" />
+    <option name="height" value="789" />
+  </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -125,14 +138,23 @@
             <path>
               <item name="jquery" type="b2602c69:ProjectViewProjectNode" />
               <item name="jquery" type="462c0819:PsiDirectoryNode" />
+              <item name="cas_etude" type="462c0819:PsiDirectoryNode" />
+              <item name="libs" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="jquery" type="b2602c69:ProjectViewProjectNode" />
+              <item name="jquery" type="462c0819:PsiDirectoryNode" />
               <item name="paragraphes" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -156,12 +178,14 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1541498798530</updated>
-      <workItem from="1541498799726" duration="3489000" />
+      <workItem from="1541498799726" duration="4081000" />
+      <workItem from="1541526599633" duration="82000" />
+      <workItem from="1542027414799" duration="2341000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="3489000" />
+    <option name="totallyTimeSpent" value="6504000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="67" y="25" width="1853" height="1055" extended-state="6" />
@@ -211,19 +235,19 @@
     <entry file="file://$PROJECT_DIR$/cas_etude/index.html">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="240">
-          <caret line="16" lean-forward="true" selection-start-line="16" selection-end-line="16" />
+          <caret line="16" selection-start-line="16" selection-end-line="16" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/paragraphes/data.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-275" />
+        <state relative-caret-position="-500" />
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/cas_etude/app.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="105">
-          <caret line="7" column="13" selection-start-line="7" selection-start-column="13" selection-end-line="7" selection-end-column="13" />
+        <state relative-caret-position="436">
+          <caret line="166" column="30" lean-forward="true" selection-start-line="166" selection-start-column="30" selection-end-line="166" selection-end-column="30" />
           <folding>
             <element signature="n#!!doc" expanded="true" />
           </folding>

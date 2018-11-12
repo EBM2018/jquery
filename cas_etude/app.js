@@ -4,8 +4,10 @@
 
 var jP = $("<div>").html("Nouveau").addClass('p');
 var cross = $("<span>").html('X').addClass('cross').click(function(){
-    var id = $(this).siblings()[0].attr('data-id');
-    debugger;
+    console.log("test");
+    var id = $($(this).siblings()[0]).attr('data-id');
+    delParagraph(id);
+    $(this).parent().remove();
 });
 var paragraphItem = $('<div>').css('display', 'inline-block');
 
@@ -60,7 +62,7 @@ var displayParagraphs = function(data) {
   console.log("récupération des paragraphes de la bdd", data);
   data.paragraphes.forEach(paragraphe => {
     var pItem = paragraphItem.clone();
-    var crossItem = cross.clone();
+    var crossItem = cross.clone(true,true);
     var pToDisplay = $("<p>").html(paragraphe.contenu).attr('data-id', paragraphe.id);
     pItem.append(pToDisplay).append(crossItem);
     $("#contenu").append(pItem);
@@ -97,6 +99,18 @@ var addParagraph = function(ordre, contenu) {
   });
 }
 
+var delParagraph = function(id) {
+    $.getJSON(
+        `http://www.vahlioncopyright.ebm/jquery/paragraphes/data.php?action=delP&id=${id}`
+    );
+}
+
+var updateContent = function(id,contenu) {
+    $.getJSON(
+        `http://www.vahlioncopyright.ebm/jquery/paragraphes/data.php?action=updateP&id=${id}&contenu=${contenu}`
+    );
+}
+
 $(document).ready(function() {
   // traitements d'initialisation
 
@@ -120,33 +134,37 @@ $(document).ready(function() {
 // "ENTREE" => le textarea redevient un P. avec le mm contenu
 
 // Réagir aux clicks sur les P. (y compris futurs !)
-$(document).on("click", "#contenu div.p", function() {
-  // fonction appelee lors d'un clic sur un P
-  // dans le div de contenu
-  var contenu = $(this).html(); // recup contenu
-  var jTa = $("<textarea>")
+$(document).on("click", "#contenu div>p", function() {
+    var id = $(this).attr('data-id');
+    // fonction appelee lors d'un clic sur un P
+    // dans le div de contenu
+    var contenu = $(this).html(); // recup contenu
+    var jTa = $("<textarea>")
     .val(contenu)
-    .data("contenuInitial", contenu);
-  // prépa txtarea
-  // AJOUT d'une méta-donnée
+    .data("contenuInitial", contenu)
+    .attr('data-id',id);
+    // prépa txtarea
+    // AJOUT d'une méta-donnée
 
-  $(this).replaceWith(jTa); // insertion txtarea
-  jTa.focus(); // .select();
+    $(this).replaceWith(jTa); // insertion txtarea
+    jTa.focus(); // .select();
 });
 
 // Réagir aux appuis sur ENTREE dans les txtarea
 $(document).on("keydown", "#contenu textarea", function(contexte) {
-  // quelle est la touche appuyée ??
-  // en JQuery, tous les gestionnaires d'evenements
-  // sont destinataires d'un objet event en param.
-  // prop code ascii de la touche : code vaudra "Enter"
+    var id = $(this).attr('data-id');
+    // quelle est la touche appuyée ??
+    // en JQuery, tous les gestionnaires d'evenements
+    // sont destinataires d'un objet event en param.
+    // prop code ascii de la touche : code vaudra "Enter"
 
-  console.log(contexte.which);
-  if (contexte.which != 13) return;
+    console.log(contexte.which);
+    if (contexte.which != 13) return;
 
-  var contenu = $(this).val(); // recup contenu
-  var jPar = $("<p>").html(contenu); // prépa P
-  $(this).replaceWith(jPar); // insertion P
+    var contenu = $(this).val(); // recup contenu
+    var jPar = $("<p>").attr('data-id',id).html(contenu); // prépa P
+    $(this).replaceWith(jPar); // insertion P
+    updateContent(id,contenu);
 });
 
 // 3) "ESC" => toutes les éditions en cours sont annulées
@@ -159,15 +177,13 @@ $(document).keyup(function(contexte) {
 
   // parcours de tous les textarea
   $("#contenu textarea").each(function() {
+    var id = $(this).attr('data-id');
     // $(this) dénote le txtarea en cours de parcours
     // permet de récupérer le contenu initial
     var contenu = $(this).data("contenuInitial");
-    var jPar = $("<p>").html(contenu); // prépa P
+    var jPar = $("<p>").attr('data-id',id).html(contenu); // prépa P
     $(this).replaceWith(jPar); // insertion P
-  });
-});
+      //Faire l'update de P
 
-// DEBUG
-$(document).on("mouseover", "#contenu *", function() {
-  console.log($(this).data());
+  });
 });
