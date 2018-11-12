@@ -61,23 +61,65 @@
                 // en JQuery, tous les gestionnaires d'evenements
                 // sont destinataires d'un objet event en param.
                 // prop code ascii de la touche : code vaudra "Enter"
-                console.log(contexte.which);
                 if (contexte.which != 13) return;
                 var contenu = $(this).val(); // recup contenu
                 if (contenu === '') return false;
                 var idRequest = $(this).parent().attr("id");
                 var jPar = $("<p class='contenu'>").html(contenu); // prépa P
                 $(this).replaceWith(jPar); // insertion P
-                console.log("data.php?action=updateP?id=" + idRequest + "&contenu=" + contenu);
                 $.getJSON("data.php?action=updateP&id=" + idRequest + "&contenu=" + contenu);
             });
+        /*$(document).on("click",
+            ".add",
+            function () {
+                let numItems = $('.contenu').length;
+                $("#contenu").append('<div><textarea class=""></textarea></div>');
+                $(document).on("keydown",
+                    "#contenu textarea",
+                    function (contexte) {
+                        // quelle est la touche appuyée ??
+                        // en JQuery, tous les gestionnaires d'evenements
+                        // sont destinataires d'un objet event en param.
+                        // prop code ascii de la touche : code vaudra "Enter"
+                        if (contexte.which != 13) return;
+                        var contenu = $(".add").val(); // recup contenu
+                        if (contenu === '') return false;
+                        var jPar = $("<p class='contenu'>").html(contenu); // prépa P
+                        $(this).replaceWith(jPar); // insertion P
+                        $.getJSON("data.php?action=addP&order=" + numItems + 1 + "&contenu=" + contenu);
+                    });
+            });*/
+
+        $(document).on("click",
+            ".add",
+            function () {
+                // récupération du nombre de paragraphes
+                let numItems = $('.contenu').length;
+                order = parseInt(numItems) + 1;
+                //  gestionnaire d'évnt sur click sur btn +
+                // ici, $(this) dénote le bouton cliqué
+                // $(this).next() dénote donc le champ d'entrée texte
+                // $(this).next().val() est son contenu
+
+                // Récupération du contenu du champ texte
+                var contenu = 'Nouveau paragraphe';
+                $(this).next().val(""); // puis on le vide
+                var Jdiv = $('<div class="ajout"><p class="contenu">' + contenu + '</p></div>');
+
+                // on insère un nouveau P avec ce contenu
+                $("#contenu").append(Jdiv);
+                $.getJSON("data.php?action=addP&ordre=" + order + "&contenu=" + contenu, function (data) {
+                   $(".ajout").attr('id', data.id);
+                });
+            });
+
     });
 </script>
 
 <body>
 
 <div id="contenu">
-
+    <button class="add">ajouter</button>
 </div>
 
 </body>
