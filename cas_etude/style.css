@@ -1,0 +1,44 @@
+#contenu *  {
+    padding:3px;
+    margin:3px;
+    border:none;
+    resize:none;
+    width:90%;
+    margin: auto;
+}
+.p {
+    display: inline-block;
+}
+#contenu>div {
+    padding: 10px 0;
+    max-width: 600px;
+}
+#contenu>div:hover{
+    background-color: #f6f6f6;
+}
+.p:hover {
+    cursor: pointer;
+}
+.cross {
+    font-size: 30px;
+    font-family: 'Courier New', Courier, monospace;
+    cursor: pointer;
+    min-height: 20px;
+    width: 20px;
+    display: inline;
+}
+#contenu textarea {
+    border:1px solid black;
+}
+
+#contenu p:hover {
+    border:1px dashed black;
+    cursor:pointer;
+}
+.btnPlus {
+    display:block;
+    max-width: 600px;
+    margin: auto;
+}
+.red *{ color:red;}
+.blue *{ color:blue;}

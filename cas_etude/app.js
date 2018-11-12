@@ -3,13 +3,13 @@
 // suivant une méta-donnée "position"
 
 var jP = $("<div>").html("Nouveau").addClass('p');
-var cross = $("<span>").html('X').addClass('cross').click(function(){
+var cross = $("<div>").html("X").addClass('cross').click(function(){
     console.log("test");
     var id = $($(this).siblings()[0]).attr('data-id');
     delParagraph(id);
     $(this).parent().remove();
 });
-var paragraphItem = $('<div>').css('display', 'inline-block');
+var paragraphItem = $('<div>');
 
 var composantBtnP = $("<div>")
   .addClass("btnPlus")
@@ -41,7 +41,9 @@ var composantBtnP = $("<div>")
           else $("#contenu").append(paragraphNextP);
 
         ordre--;
-        addParagraph(ordre, jNextP.html());
+        addParagraph(ordre, jNextP.html()).then(function (newP) {
+            $(paragraphNextP.children()[0]).attr('data-ordre',ordre).attr('data-id',newP.id);
+        });
       })
   )
   .append($("<input type='text' />"));
@@ -63,7 +65,7 @@ var displayParagraphs = function(data) {
   data.paragraphes.forEach(paragraphe => {
     var pItem = paragraphItem.clone();
     var crossItem = cross.clone(true,true);
-    var pToDisplay = $("<p>").html(paragraphe.contenu).attr('data-id', paragraphe.id).attr('data-ordre', paragraphe.ordre);
+    var pToDisplay = $("<div>").addClass('p').html(paragraphe.contenu).attr('data-id', paragraphe.id).attr('data-ordre', paragraphe.ordre);
     pItem.append(pToDisplay).append(crossItem);
     $("#contenu").append(pItem);
   });
@@ -92,7 +94,7 @@ var displayNewParagraph = function() {
 };
 
 var addParagraph = function(ordre, contenu) {
-  $.getJSON(
+  return $.getJSON(
     `http://www.vahlioncopyright.ebm/jquery/paragraphes/data.php?action=addP&ordre=${ordre}&contenu=${contenu}`
   ).then(data => {
     return data;
@@ -111,6 +113,12 @@ var updateContent = function(id,contenu) {
     );
 }
 
+var updateOrder = function(id,ordre) {
+    $.getJSON(
+        `http://www.vahlioncopyright.ebm/jquery/paragraphes/data.php?action=updateOrdre&id=${id}&ordre=${ordre}`
+    );
+}
+
 $(document).ready(function() {
   // traitements d'initialisation
 
@@ -124,7 +132,22 @@ $(document).ready(function() {
         .clone(true)
         .addClass("blue")
         .data("top", false)
-    );
+    )
+
+    $("#contenu").sortable({
+       update: function(event, ui) {
+           var element = ui.item.children()[0];
+           var id = $(element).attr('data-id');
+           if (ui.item.prev().length !== 0) {
+               var ordre = parseInt($(ui.item.prev().children()[0]).attr('data-ordre')) + 1;
+           }
+           else {
+               var ordre = parseInt($(ui.item.next().children()[0]).attr('data-ordre'));
+           }
+           $(element).attr('data-ordre',ordre);
+           updateOrder(id,ordre);
+       }
+    });
 
   // récupération des paragraphes de la bdd
   getParagraphs();
@@ -134,7 +157,7 @@ $(document).ready(function() {
 // "ENTREE" => le textarea redevient un P. avec le mm contenu
 
 // Réagir aux clicks sur les P. (y compris futurs !)
-$(document).on("click", "#contenu div>p", function() {
+$(document).on("click", "#contenu div.p", function() {
     var id = $(this).attr('data-id');
     // fonction appelee lors d'un clic sur un P
     // dans le div de contenu
@@ -165,7 +188,7 @@ $(document).on("keydown", "#contenu textarea", function(contexte) {
     if (contenu.length === 0) {
         resetChanges(this);
     }
-    var jPar = $("<p>").attr('data-id',id).html(contenu); // prépa P
+    var jPar = $("<div>").addClass('p').attr('data-id',id).html(contenu); // prépa P
     $(this).replaceWith(jPar); // insertion P
     updateContent(id,contenu);
 });
@@ -189,8 +212,9 @@ var resetChanges = function(element){
     // $(this) dénote le txtarea en cours de parcours
     // permet de récupérer le contenu initial
     var contenu = $(element).data("contenuInitial");
-    var jPar = $("<p>").attr('data-id',id).html(contenu); // prépa P
+    var jPar = $("<div>").addClass('p').attr('data-id',id).html(contenu); // prépa P
     $(element).replaceWith(jPar); // insertion P
     //Faire l'update de P
 
 }
+
