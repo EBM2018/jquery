@@ -1,11 +1,14 @@
+<link rel="stylesheet" href="jquery-ui-1.12.1/jquery-ui.css">
 <script src="jquery-3.3.1.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="jquery-ui-1.12.1/jquery-ui.js"></script>
+
 <style>
     #contenu * {
         padding: 3px;
         margin: 3px;
-        border: none;
         resize: none;
+        border: none;
         font-family: Arial;
         font-size: 20px;
     }
@@ -28,6 +31,13 @@
     .croix:hover {
         cursor: pointer;
     }
+    .dragdrop {
+        height: 25px;
+        width: 25px;
+    }
+    .dragdrop:hover {
+        cursor: pointer;
+    }
 </style>
 
 
@@ -36,7 +46,7 @@
         var i = 0;
         $.getJSON("data.php?action=getP", function (data) {
             for (i in data.paragraphes) {
-                $("#contenu").append('<div id=' + data.paragraphes[i].id + '><p class="contenu">' + data.paragraphes[i].contenu + '</p><img src="croix.png" class="croix" /></div>');
+                $("#contenu").append('<div id=' + data.paragraphes[i].id + '><img src="updown.png" class="dragdrop" />  <p class="contenu">' + data.paragraphes[i].contenu + '</p><img src="croix.png" class="croix" /></div>');
             }
         });
         $(document).on("click", "#contenu .contenu", function () {
@@ -92,8 +102,13 @@
             $("#" + idRequest).remove();
             $.getJSON("data.php?action=delP&id=" + idRequest);
         });
-    });
-</script>
+        $("#contenu").sortable({
+            update: function( event, ui ) {
+
+            }
+        }
+        });
+    </script>
 
 <body>
 
