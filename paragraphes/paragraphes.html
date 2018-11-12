@@ -47,7 +47,7 @@
                 $("#contenu").append('<tr id=' + data.paragraphes[i].id + '><td>' + data.paragraphes[i].id + '</td><td class="contenu" >' + data.paragraphes[i].contenu + '</td><td>' + data.paragraphes[i].ordre + '</td></tr>');
             }
         });
-        $(document).on("click","#contenu .contenu", function (){
+        /*$(document).on("click","#contenu .contenu", function (){
             // fonction appelee lors d'un clic sur un P
             // dans le div de contenu
             var contenu = $(this).html(); // recup contenu
@@ -60,7 +60,7 @@
             $(this).replaceWith(jTa); // insertion txtarea
             jTa.focus(); // .select();
 
-        });
+        });*/
         $(document).on(	"keydown",
             "#contenu textarea",
             function (contexte){
