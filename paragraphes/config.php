@@ -19,7 +19,7 @@ $BDD_base="paragraphes";
 // MACHINE LINUX 
 $BDD_host="localhost";
 $BDD_user="felix";
-$BDD_password="hello";
+$BDD_password="hesoyam59";
 $BDD_base="tinyMVC2018";
 
 ?>

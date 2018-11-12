@@ -46,7 +46,7 @@
         var i = 0;
         $.getJSON("data.php?action=getP", function (data) {
             for (i in data.paragraphes) {
-                $("#contenu").append('<div id=' + data.paragraphes[i].id + '><img src="updown.png" class="dragdrop" />  <p class="contenu">' + data.paragraphes[i].contenu + '</p><img src="croix.png" class="croix" /></div>');
+                $("#contenu").append('<div ordre='+ data.paragraphes[i].ordre+' id=' + data.paragraphes[i].id + '><img src="updown.png" class="dragdrop" />  <p class="contenu">' + data.paragraphes[i].contenu + '</p><img src="croix.png" class="croix" /></div>');
             }
         });
         $(document).on("click", "#contenu .contenu", function () {
@@ -102,11 +102,19 @@
             $("#" + idRequest).remove();
             $.getJSON("data.php?action=delP&id=" + idRequest);
         });
-        $("#contenu").sortable({
+        $("#contenu").sortable({ handle: ".dragdrop",
             update: function( event, ui ) {
-
+                /*console.log($(".contenu",ui.item).parent().attr("id")); // récupère l'id de l'élément cliqué
+                console.log($(".contenu",ui.item).parent().attr("ordre")); // récupère l'ordre de départ */
+                console.log(event);
+                var test = $(".contenu",ui.item).parent().prev();
+                var test1 = $(".contenu",ui.item).parent();
+                console.log("prev");
+                console.log(test);
+                console.log("this");
+                console.log(test1);
             }
-        }
+        });
         });
     </script>
 
