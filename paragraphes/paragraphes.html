@@ -1,7 +1,6 @@
 <script src="jquery-3.3.1.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <style>
-
     #contenu * {
         padding: 3px;
         margin: 3px;
@@ -33,54 +32,46 @@
 
 
 <script>
-
-
     // TODO : préparer un "composant" boutonPlus
     // qui insère des P. en position haute ou basse
     // suivant une méta-donnée "position"
     $(document).ready(function () {
-        $("#contenu").append('<tr><td>ID</td><td>Contenu</td><td>Ordre</td></tr>');
-
         var i = 0;
         $.getJSON("data.php?action=getP", function (data) {
             for (i in data.paragraphes) {
-                $("#contenu").append('<tr id=' + data.paragraphes[i].id + '><td>' + data.paragraphes[i].id + '</td><td class="contenu" >' + data.paragraphes[i].contenu + '</td><td>' + data.paragraphes[i].ordre + '</td></tr>');
+                $("#contenu").append('<div id=' + data.paragraphes[i].id + '><p class="contenu">' + data.paragraphes[i].contenu + '</p></div>');
             }
         });
-        /*$(document).on("click","#contenu .contenu", function (){
+        $(document).on("click", "#contenu .contenu", function () {
             // fonction appelee lors d'un clic sur un P
             // dans le div de contenu
             var contenu = $(this).html(); // recup contenu
             var jTa = $("<textarea>")
                 .val(contenu)
-                .data("contenuInitial",contenu);
+                .data("contenuInitial", contenu);
             // prépa txtarea
             // AJOUT d'une méta-donnée
-
             $(this).replaceWith(jTa); // insertion txtarea
             jTa.focus(); // .select();
-
-        });*/
-        $(document).on(	"keydown",
+        });
+        $(document).on("keydown",
             "#contenu textarea",
-            function (contexte){
+            function (contexte) {
                 // quelle est la touche appuyée ??
                 // en JQuery, tous les gestionnaires d'evenements
                 // sont destinataires d'un objet event en param.
                 // prop code ascii de la touche : code vaudra "Enter"
-
                 console.log(contexte.which);
-                if (contexte.which != 13) return ;
-
+                if (contexte.which != 13) return;
                 var contenu = $(this).val(); // recup contenu
+                if (contenu === '') return false;
                 var idRequest = $(this).parent().attr("id");
-                var jPar = $("<p>").html(contenu); // prépa P
+                var jPar = $("<p class='contenu'>").html(contenu); // prépa P
                 $(this).replaceWith(jPar); // insertion P
                 console.log("data.php?action=updateP?id=" + idRequest + "&contenu=" + contenu);
                 $.getJSON("data.php?action=updateP&id=" + idRequest + "&contenu=" + contenu);
             });
     });
-
 </script>
 
 <body>
