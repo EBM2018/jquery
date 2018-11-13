@@ -1,14 +1,15 @@
-
+<link rel="stylesheet" href="jquery-ui-1.12.1.custom/jquery-ui.css">
 <script src="jquery-3.3.1.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script src="jquery-ui-1.12.1.custom/jquery-ui.js"></script>
 <script src="utils.js"></script>
 <script src="ajax.js"></script>
 <style>
-    #contenu *  {
-        padding:3px;
-        margin:3px;
+    #contenu {
+        margin: auto;
         border:none;
         resize:none;
-        width:90%;
+        height: 200px;
 
     }
     #contenu textarea {
@@ -17,31 +18,34 @@
     }
     #contenu p:hover {
         border:1px dashed black;
+        position: center;
         cursor:pointer;
+    }
+    #contenu p {
+        width: 200px;
+        padding: auto;
     }
     #contenu {color: black;}
 
 
-    #saisie{border:1px solid grey;
-    }
-    #suggestions{border:1px solid gray;padding:0px;
-        position:absolute;left:30px;right:550px;margin:0px;
-        display:none;
-    }
-    #suggestions li {display:block;padding:5px;}
-    #suggestions li:hover{
-        cursor:pointer;
-        background-color:lightgrey;
-    }
     .croix {
         display: inline;
         height: 25px;
-        width: 5px;
+        width: 25px;
+        float: center
     }
     .croix:hover {
         cursor:pointer;
 
 
+    }
+    .contenu {
+        display: inline-block;
+        padding: 50px;
+
+        margin:0;
+        padding:0;
+        line-height: 25px;
     }
 
 </style>
@@ -55,7 +59,7 @@
         //connexion à la BBD
         $.getJSON("data.php?action=getP", function (data) {
                 for (i in data.paragraphes) {
-                    $("#contenu").prepend('<div id=' + data.paragraphes[i].id + '><p class="contenu">' + data.paragraphes[i].contenu + '</p><img src=\'croix.png\' class=\'croix\'/></div>');
+                    $("#contenu").prepend('<div id=' + data.paragraphes[i].id + '><p class="contenu">' + data.paragraphes[i].contenu + '</p><img src="croix.png" class="croix"/></div>');
                 }
             });
             // 1) ajouter les éléments d'interaction à la page
@@ -64,6 +68,8 @@
             var jPlus = $("<input type='button'/>")
                 .val("+")
                 .click(function () {
+                    let numItems = $('.contenu').length;
+                    order = parseInt(numItems) + 1;
                     //  gestionnaire d'évnt sur click sur btn +
                     // ici, $(this) dénote le bouton cliqué
                     // $(this).next() dénote donc le champ d'entrée texte
@@ -72,17 +78,31 @@
                     // Récupération du contenu du champ texte
                     var contenu = $(this).next().val();
                     $(this).next().val(""); // puis on le vide
-
+                    var Jdiv = $('<div class="ajout"><p class="contenu">' + contenu + '</p><img src="croix.png" class="croix" /></div>');
+                    $("#contenu").prepend(Jdiv);
                     // on insère un nouveau P avec ce contenu
-                    var jNextP = jP.clone();
-                    if (contenu) jNextP.html(contenu);
-                    $("#contenu").prepend(jNextP);
+                    //var jNextP = jP.clone();
+                    //if (contenu) jNextP.html(contenu);
+                    //$("#contenu").prepend(jNextP)//.append("<img src=\"croix.png\" class=\"croix\"/>");
+                    //var img = $("#contenu").
                     console.log("data.php?action=addP&ordre=" + $("#contenu p").length + "&contenu=" + contenu);
-                    $.getJSON("data.php?action=addP&ordre=" + $("#contenu p").length + "&contenu=" + contenu);
+                    $.getJSON("data.php?action=addP&ordre=" + $("#contenu p").length + "&contenu=" + contenu, function (data) {
+                        $(".ajout").attr('id', data.id);
+                        var jTa = $("<textarea>")
+                            .val(contenu)
+                            .data("contenuInitial", contenu);
+                        // prépa txtareas
+                        // AJOUT d'une méta-donnée
+                        //$(".ajout .contenu").replaceWith(jTa); // insertion txtarea
+                        //jTa.focus();
+                        //$(".ajout").removeClass("ajout");
+                    });
                 });
-            //ajouter en appuyant sur entrer
-            // A FAIRE
-            //
+
+            //ajouter en appuyant sur entrer/////////////////////////////////////////////////////////////////////
+
+
+        /////////////////////////////////////////////////////////////////////////////////////////////
 
             $("#contenu").before(jPlus); // insertion dans le DOM
             jPlus.after(jT); // ajout champ texte après le bouton
@@ -95,6 +115,7 @@
                 // fonction appelee lors d'un clic sur un P
                 // dans le div de contenu
                 var contenu = $(this).html(); // recup contenu
+
                 var jTa = $("<textarea>")
                     .val(contenu)
                     .data("contenuInitial", contenu);
@@ -103,7 +124,7 @@
                 // AJOUT d'une méta-donnée
                 $(this).replaceWith(jTa); // insertion txtarea
                 jTa.focus(); // .select();
-                var img = $("#contenu").append("");
+
 
             });
 
@@ -172,7 +193,7 @@
 <body>
 
 <div id="contenu">
+    <!--<button class="add">ajouter</button>-->
+</div>
 
-    </div>
-
-    </body>
+</body>
