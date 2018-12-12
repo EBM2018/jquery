@@ -12,6 +12,12 @@
         font-family: Arial;
         font-size: 20px;
     }
+    .add {
+        position:absolute;
+        left:40%;
+        top:50%;
+        border:1px solid black;
+    }
 
     #contenu textarea {
         border: 1px solid black;
@@ -21,20 +27,25 @@
         border: 1px dashed black;
         cursor: pointer;
     }
+
     .contenu {
         float: left;
     }
+
     .croix {
         height: 25px;
         width: 25px;
     }
+
     .croix:hover {
         cursor: pointer;
     }
+
     .dragdrop {
         height: 25px;
         width: 25px;
     }
+
     .dragdrop:hover {
         cursor: pointer;
     }
@@ -43,12 +54,18 @@
 
 <script>
     $(document).ready(function () {
+
+        // load articles
         var i = 0;
-        $.getJSON("data.php?action=getP", function (data) {
-            for (i in data.paragraphes) {
-                $("#contenu").append('<div ordre='+ data.paragraphes[i].ordre+' id=' + data.paragraphes[i].id + '><img src="updown.png" class="dragdrop" />  <p class="contenu">' + data.paragraphes[i].contenu + '</p><img src="croix.png" class="croix" /></div>');
+        $.getJSON("data.php?action=getA", function (data) {
+            $("#contenu").append('<SELECT name="nom" id="select" size="1"></SELECT>');
+            $("#select").append('<OPTION></OPTION>');
+            for (i in data.articles) {
+                $("#select").append('<OPTION id="' + data.articles[i].id + '"><div><p class="contenu">' + data.articles[i].name + '</p></div></OPTION>');
             }
         });
+
+        // Enable modif
         $(document).on("click", "#contenu .contenu", function () {
             // fonction appelee lors d'un clic sur un P
             // dans le div de contenu
@@ -61,6 +78,8 @@
             $(this).replaceWith(jTa); // insertion txtarea
             jTa.focus(); // .select();
         });
+
+        // valid modif
         $(document).on("keydown",
             "#contenu textarea",
             function (contexte) {
@@ -77,7 +96,7 @@
                 $.getJSON("data.php?action=updateP&id=" + idRequest + "&contenu=" + contenu);
             });
 
-
+        // add paragraphe
         $(document).on("click",
             ".add",
             function () {
@@ -97,7 +116,7 @@
                 // on insère un nouveau P avec ce contenu
                 $("#contenu").append(Jdiv);
                 $.getJSON("data.php?action=addP&ordre=" + order + "&contenu=" + contenu, function (data) {
-                   $(".ajout").attr('id', data.id);
+                    $(".ajout").attr('id', data.id);
                     var jTa = $("<textarea>")
                         .val(contenu)
                         .data("contenuInitial", contenu);
@@ -110,14 +129,15 @@
                 });
             });
 
-        $(document).keyup(function(contexte){
+        // modification de paragraphe annulée
+        $(document).keyup(function (contexte) {
             if (contexte.which != 27) return;
 
             // parcours de tous les textarea
-            $("#contenu textarea").each(function(){
+            $("#contenu textarea").each(function () {
                 // $(this) dénote le txtarea en cours de parcours
                 // permet de récupérer le contenu initial
-                var contenu = $(this).data("contenuInitial") ;
+                var contenu = $(this).data("contenuInitial");
                 var jPar = $("<p class='contenu'>").html(contenu); // prépa P
                 $(this).replaceWith(jPar); // insertion P
             });
@@ -133,23 +153,46 @@
             $("#" + idRequest).remove();
             $.getJSON("data.php?action=delP&id=" + idRequest);
         });
-        $("#contenu").sortable({ handle: ".dragdrop",
+
+        // sort P
+        $("#contenu").sortable({
+            handle: ".dragdrop",
             start: (event, ui) => {
                 ui.item.startPos = ui.item.index();
-                console.log(ui.item.prev());
             },
             update: (event, ui) => {
-                $.getJSON("data.php?action=updateOrdre&id=" + ui.item[0].id + "&ordre=" + ui.item.index());
+                let order = ui.item.index();
+                console.log();
+                $.getJSON("data.php?action=updateOrdre&id=" + ui.item[0].id + "&ordrearrive=" + order + "&ordredepart=" + ui.item.startPos);
             }
         });
 
+        // Function pour charger les paragraphes
+        $(document).on("change",
+            "#select",
+            function () {
+                $('.parag').remove();
+                var id = $("#select").children(":selected").attr("id");
+                console.log(id);
+                var i = 0;
+
+                $.getJSON("data.php?action=getPFromA&article=" + id, function (data) {
+                    console.log(data);
+                    for (i in data.paragraphes) {
+                        $("#contenu").append('<div ordre=' + data.paragraphes[i].ordre + ' id=' + data.paragraphes[i].id + ' class="parag"><img src="updown.png" class="dragdrop" />  <p class="contenu">' + data.paragraphes[i].contenu + '</p><img src="croix.png" class="croix" /></div>');
+                    }
+                });
+                $('#contenu').append('<button class="add">ajouter paragraphe</button>');
+
+            })
     });
+
+
 </script>
 
 <body>
 
 <div id="contenu">
-    <button class="add">ajouter</button>
 </div>
 
 </body>
