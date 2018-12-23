@@ -173,7 +173,7 @@
                 $('.parag').remove();
                 var id = $("#select").children(":selected").attr("id");
                 var i = 0;
-
+                // TODO : lorsqu'un P est créé, il apparait dans toutes les listes de P jusqu'à ce que la page soit actualisée, à corriger
                 $.getJSON("data.php?action=getPFromA&article=" + id, function (data) {
                     console.log(data);
                     for (i in data.paragraphes) {
@@ -203,6 +203,8 @@
             });
         $("#contenu").before(jPlus); // insertion dans le DOM
         jPlus.after(jT); // ajout champ texte après le bouton
+
+        // TODO : Faire le mode édition
     });
 
 
