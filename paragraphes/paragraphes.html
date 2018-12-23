@@ -64,7 +64,6 @@
                 $("#select").append('<OPTION id="' + data.articles[i].id + '"><div><p class="contenu">' + data.articles[i].name + '</p></div></OPTION>');
             }
         });
-        //$('#contenu').append('<button class="addA">ajouter article</button>');
 
         // Enable modif
         $(document).on("click", "#contenu .contenu", function () {
@@ -167,8 +166,6 @@
                 $.getJSON("data.php?action=updateOrdre&id=" + ui.item[0].id + "&ordrearrive=" + order + "&ordredepart=" + ui.item.startPos);
             }
         });
-        // TODO : ajouter paragraphe dans un article
-        // TODO : ajouter article
         // Function pour charger les paragraphes
         $(document).on("change",
             "#select",
@@ -196,10 +193,14 @@
                 // Récupération du contenu du champ texte
                 var contenu = $(this).next().val();
                 $(this).next().val(""); // puis on le vide
-                $.getJSON("data.php?action=addA&name=" + contenu);
-                window.location.reload(); // Actualisation de la page pour que l'article apparaisse directement dans la liste
+                $.getJSON("data.php?action=addA&name=" + contenu, function (data) {
+                    $(".ajout").attr('id', data.id);
+                    $("#select").val(contenu).change(); // redirige directement sur l'article en question
+                    // ajout du nom de l'article créé dans la liste déroulante,
+                    // permet par la suite de pouvoir ajouter un paragraphe sans problèmes car l'id de l'article sélectionné est accessible
+                    $("#select").append('<OPTION id="' + data.id + '" selected><div><p class="contenu">' + contenu + '</p></div></OPTION>');
+                });
             });
-
         $("#contenu").before(jPlus); // insertion dans le DOM
         jPlus.after(jT); // ajout champ texte après le bouton
     });
