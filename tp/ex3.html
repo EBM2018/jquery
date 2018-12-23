@@ -21,11 +21,6 @@
 
 
 <script>
-
-// Paragraphe modèle : 
-// SOL1 ) on peut lui associer des interactions 
-// Attention au moment du clonage !!
-// SOL2 ) on peut utiliser $(document).on(...)
 var jP= $("<p>").html("Nouveau");
 
 
@@ -50,7 +45,7 @@ $(document).ready(function (){
 			// on insère un nouveau P avec ce contenu 
 			var jNextP = jP.clone(); 
 			if (contenu) jNextP.html(contenu);
-			$("#contenu").prepend(jNextP); 
+			$("#contenu").prepend(jNextP);
 		});  
 
 	$("#contenu").before(jPlus); // insertion dans le DOM 

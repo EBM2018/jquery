@@ -125,8 +125,54 @@ if (isset($_GET["action"])) {
             $data["feedback"] = "ok";
             $data["articles"] = $res;
             break;
-    }
-}
+
+        // id, name
+        case "addA" :
+            // Ajoute un Article et renvoie son identifiant
+
+            $name= false;
+            if (isset($_GET["name"])) $name = $_GET["name"];
+
+            if ($name) {
+                $SQL = "INSERT INTO articles(name) VALUES ('$name')";
+                $nextId = SQLInsert($SQL);
+                $data["feedback"] = "ok";
+                $data["id"] = $nextId;
+            }
+            break;
+
+        case "updateA" :
+            // Modifie un A. dont le nom est passé en paramètre
+            if (isset($_GET["name"])) $name = $_GET["name"];
+            if (isset($_GET["id"])) $id = $_GET["id"];
+
+            if ($id && $name) {
+                $SQL = "UPDATE articles SET name='$name' WHERE id='$id'";
+                SQLUpdate($SQL);
+                $data["feedback"] = "ok";
+            }
+            break;
+
+        case "delA" :
+            if (isset($_GET["id"])) $id = $_GET["id"];
+            if ($id) {
+                $SQL = "DELETE FROM articles WHERE id='$id'";
+                SQLUpdate($SQL);
+                $data["feedback"] = "ok";
+            }
+        // id_article, id_paragraphe
+        case "addPinA" :
+            if (isset($_GET["id_article"])) $id_article = $_GET["id_article"];
+            if (isset($_GET["id_paragraphe"])) $id_paragraphe = $_GET["id_paragraphe"];
+
+            if ($id_article && $id_paragraphe) {
+                $SQL = "Insert INTO articles_paragraphes (id_article, id_paragraphe) Values ('$id_article', '$id_paragraphe')";
+                $nextId = SQLInsert($SQL);
+                $data["feedback"] = "ok";
+                $data["id"] = $nextId;
+            }
+            break;
+    }}
 
 echo json_encode($data);
 ?>

@@ -64,6 +64,7 @@
                 $("#select").append('<OPTION id="' + data.articles[i].id + '"><div><p class="contenu">' + data.articles[i].name + '</p></div></OPTION>');
             }
         });
+        //$('#contenu').append('<button class="addA">ajouter article</button>');
 
         // Enable modif
         $(document).on("click", "#contenu .contenu", function () {
@@ -107,7 +108,6 @@
                 // ici, $(this) dénote le bouton cliqué
                 // $(this).next() dénote donc le champ d'entrée texte
                 // $(this).next().val() est son contenu
-
                 // Récupération du contenu du champ texte
                 var contenu = 'Nouveau paragraphe';
                 $(this).next().val(""); // puis on le vide
@@ -125,7 +125,9 @@
                     $(".ajout .contenu").replaceWith(jTa); // insertion txtarea
                     jTa.focus();
                     $(".ajout").removeClass("ajout");
-
+                    var id_article = $("#select").children(":selected").attr("id"); // id de l'article associé
+                    var id_paragraphe = data.id; // id de l'article créé
+                    $.getJSON("data.php?action=addPinA&id_article=" + id_article + "&id_paragraphe=" + id_paragraphe);
                 });
             });
 
@@ -162,18 +164,17 @@
             },
             update: (event, ui) => {
                 let order = ui.item.index();
-                console.log();
                 $.getJSON("data.php?action=updateOrdre&id=" + ui.item[0].id + "&ordrearrive=" + order + "&ordredepart=" + ui.item.startPos);
             }
         });
-
+        // TODO : ajouter paragraphe dans un article
+        // TODO : ajouter article
         // Function pour charger les paragraphes
         $(document).on("change",
             "#select",
             function () {
                 $('.parag').remove();
                 var id = $("#select").children(":selected").attr("id");
-                console.log(id);
                 var i = 0;
 
                 $.getJSON("data.php?action=getPFromA&article=" + id, function (data) {
@@ -184,7 +185,23 @@
                 });
                 $('#contenu').append('<button class="add">ajouter paragraphe</button>');
 
-            })
+
+            });
+
+        // Add article
+        var jT = $("<input type='text' />");
+        var jPlus = $("<input type='button'/>")
+            .val("Ajouter article")
+            .click(function(){
+                // Récupération du contenu du champ texte
+                var contenu = $(this).next().val();
+                $(this).next().val(""); // puis on le vide
+                $.getJSON("data.php?action=addA&name=" + contenu);
+                window.location.reload(); // Actualisation de la page pour que l'article apparaisse directement dans la liste
+            });
+
+        $("#contenu").before(jPlus); // insertion dans le DOM
+        jPlus.after(jT); // ajout champ texte après le bouton
     });
 
 
