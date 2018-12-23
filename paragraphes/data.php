@@ -30,7 +30,16 @@ if (isset($_GET["action"])) {
         case "delP" :
             if (isset($_GET["id"])) $id = $_GET["id"];
             if ($id) {
-                $SQL = "DELETE FROM paragraphes WHERE id='$id'";
+                $SQL = "DELETE FROM paragraphes WHERE id='$id';
+                DELETE FROM articles_paragraphes WHERE id_paragraphe='$id'";
+                SQLUpdate($SQL);
+                $data["feedback"] = "ok";
+            }
+
+        case "delPinA" :
+            if (isset($_GET["id"])) $id = $_GET["id"];
+            if ($id) {
+                $SQL = "DELETE FROM articles_paragraphes WHERE id='$id'";
                 SQLUpdate($SQL);
                 $data["feedback"] = "ok";
             }
