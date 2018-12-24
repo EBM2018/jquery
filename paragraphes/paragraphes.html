@@ -207,11 +207,18 @@
                     for (i in data.paragraphes) { // Affichage des tous les P associés à un article
                         $("#contenu").append('<div ordre=' + data.paragraphes[i].ordre + ' id=' + data.paragraphes[i].id + ' class="parag"><img src="updown.png" class="dragdrop" />  <p class="contenu">' + data.paragraphes[i].contenu + '</p><img src="croix.png" class="croix" /></div>');
                     }
+                    if (data.paragraphes[0]) {
+                        // siginie qu'il y a au moins 1 paragraphe dans l'article, donc que l'article n'est pas nouveau
+                        $('#contenu').append('<button class="edit">passer en mode edition</button>');
+                    }
+                    else {
+                        // L'article est nouveau, dans ce cas :
+                        // On passe directement en mode édition pour pouvoir ajouter un paragraphe
+                        etat = "mode edition"; // permet de situer dans quel état on se trouve
+                        $('#contenu').append('<button class="add">ajouter paragraphe</button>'); // on peut ajouter un paragraphe uniquement en mode édition
+                        $('#contenu').append('<button class="edit2">revenir au mode normal</button>');
+                    }
                 });
-                // On passe directement en mode édition
-                etat = "mode edition"; // permet de situer dans quel état on se trouve
-                $('#contenu').append('<button class="add">ajouter paragraphe</button>'); // on peut ajouter un paragraphe uniquement en mode édition
-                $('#contenu').append('<button class="edit2">revenir au mode normal</button>');
             });
 
         // Ajout d'un article
