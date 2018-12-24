@@ -12,20 +12,29 @@
         font-family: Arial;
         font-size: 20px;
     }
-    .add {
+    .edit, .edit2 {
         position:absolute;
         left:40%;
         top:50%;
         border:1px solid black;
     }
+    .add {
+        position:absolute;
+        left:42%;
+        top:55%;
+        border:1px solid black;
+    }
+
 
     #contenu textarea {
         border: 1px solid black;
     }
 
     #contenu p:hover {
-        border: 1px dashed black;
+        border-width: 1px;
+        border-color: black;
         cursor: pointer;
+        border-style: dashed;
     }
 
     .contenu {
@@ -64,12 +73,14 @@
                 $("#select").append('<OPTION id="' + data.articles[i].id + '"><div><p class="contenu">' + data.articles[i].name + '</p></div></OPTION>');
             }
         });
-
+        var etat = "mode normal"; //intilaisation de la variable d'état, par défaut elle est en mode normal
         // Enable modif
         $(document).on("click", "#contenu .contenu", function () {
             // fonction appelee lors d'un clic sur un P
             // dans le div de contenu
             var contenu = $(this).html(); // recup contenu
+            console.log(etat); // récupère l'état (mode édition ou mode normal)
+            if (etat === "mode normal") return;
             var jTa = $("<textarea>")
                 .val(contenu)
                 .data("contenuInitial", contenu);
@@ -88,12 +99,23 @@
                 // sont destinataires d'un objet event en param.
                 // prop code ascii de la touche : code vaudra "Enter"
                 if (contexte.which != 13) return;
-                var contenu = $(this).val(); // recup contenu
-                if (contenu === '') return false;
-                var idRequest = $(this).parent().attr("id"); // attribut parent
-                var jPar = $("<p class='contenu'>").html(contenu); // prépa P
-                $(this).replaceWith(jPar); // insertion P
-                $.getJSON("data.php?action=updateP&id=" + idRequest + "&contenu=" + contenu);
+                if (etat === "mode normal") {
+                    $("#contenu textarea").each(function () {
+                        // Cas où la personne modifie le P en mode édition, mais avant de valider, il repasse en mode normal
+                        // dans cecas, il faut procéder à une annulation des modifications
+                        var contenu = $(this).data("contenuInitial");
+                        var jPar = $("<p class='contenu'>").html(contenu); // prépa P
+                        $(this).replaceWith(jPar); // insertion P
+                    });
+                }
+                else {
+                    var contenu = $(this).val(); // recup contenu
+                    if (contenu === '') return false;
+                    var idRequest = $(this).parent().attr("id"); // attribut parent
+                    var jPar = $("<p class='contenu'>").html(contenu); // prépa P
+                    $(this).replaceWith(jPar); // insertion P
+                    $.getJSON("data.php?action=updateP&id=" + idRequest + "&contenu=" + contenu);
+                }
             });
 
         // add paragraphe
@@ -149,6 +171,7 @@
         $(document).on("click", ".croix", function () {
             // fonction appelee lors d'un clic sur la croix
             // dans le div de contenu
+            if (etat === "mode normal") return; // en mode normal, impossible de supprimer un P
             var idRequest = $(this).parent().attr("id"); // attribut parent
             console.log(idRequest);
             $("#" + idRequest).remove();
@@ -162,6 +185,9 @@
                 ui.item.startPos = ui.item.index();
             },
             update: (event, ui) => {
+                // dans ce cas, le drag&drop est possible mais rien n'est enregistré dans la bdd si c'est en mode normal
+                // TODO : à améliorer, il faudrait désactiver la possibilité de bouger les P
+                if (etat === "mode normal") return; // en mode normal, le drag & drop est désactivé
                 let order = ui.item.index();
                 $.getJSON("data.php?action=updateOrdre&id=" + ui.item[0].id + "&ordrearrive=" + order + "&ordredepart=" + ui.item.startPos);
             }
@@ -180,8 +206,7 @@
                         $("#contenu").append('<div ordre=' + data.paragraphes[i].ordre + ' id=' + data.paragraphes[i].id + ' class="parag"><img src="updown.png" class="dragdrop" />  <p class="contenu">' + data.paragraphes[i].contenu + '</p><img src="croix.png" class="croix" /></div>');
                     }
                 });
-                $('#contenu').append('<button class="add">ajouter paragraphe</button>');
-
+                $('#contenu').append('<button class="edit">passer en mode edition</button>');
 
             });
 
@@ -204,10 +229,25 @@
         $("#contenu").before(jPlus); // insertion dans le DOM
         jPlus.after(jT); // ajout champ texte après le bouton
 
-        // TODO : Faire le mode édition
+        // Mode édition
+        $(document).on("click",
+            ".edit",
+            function () {
+                etat = "mode edition";
+                $('#contenu').append('<button class="add">ajouter paragraphe</button>');
+                $('#contenu').append('<button class="edit2">revenir au mode normal</button>');
+            });
+        // Mode normal
+        $(document).on("click",
+            ".edit2",
+            function () {
+                etat = "mode normal";
+                $('#contenu').append('<button class="edit">passer en mode edition</button>');
+                $('#contenu').children(".add").remove(); // on enlève le bouton ajouter paragraphe
+                // TODO : Enlever pointillés lors du passage de la souris sur les P (p:hover)
+                // Test avec $('#contenu p:hover').css('border-style', 'hidden') mais ne fonctionne pas
+            });
     });
-
-
 </script>
 
 <body>
