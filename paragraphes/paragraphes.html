@@ -12,19 +12,20 @@
         font-family: Arial;
         font-size: 20px;
     }
+
     .edit, .edit2 {
         position:absolute;
         left:40%;
         top:50%;
         border:1px solid black;
     }
+
     .add {
         position:absolute;
         left:42%;
         top:55%;
         border:1px solid black;
     }
-
 
     #contenu textarea {
         border: 1px solid black;
@@ -60,27 +61,30 @@
     }
 </style>
 
-
 <script>
     $(document).ready(function () {
-
-        // load articles
+        // Au démarrage de la page, on charge les articles via la requête getA
         var i = 0;
         $.getJSON("data.php?action=getA", function (data) {
             $("#contenu").append('<SELECT name="nom" id="select" size="1"></SELECT>');
             $("#select").append('<OPTION></OPTION>');
-            for (i in data.articles) {
+            for (i in data.articles) { // Les articles apparaissent dans une liste déroulante
                 $("#select").append('<OPTION id="' + data.articles[i].id + '"><div><p class="contenu">' + data.articles[i].name + '</p></div></OPTION>');
             }
         });
-        var etat = "mode normal"; //intilaisation de la variable d'état, par défaut elle est en mode normal
-        // Enable modif
+
+        // Initialisation de la variable d'état
+        // Cette variable permet de savoir si on est en mode édition ou en mode normal
+        // Au démarrage de la page, on est par défaut en mode normal
+        var etat = "mode normal";
+
+        // Permettre les modifications de Paragraphes
         $(document).on("click", "#contenu .contenu", function () {
             // fonction appelee lors d'un clic sur un P
             // dans le div de contenu
             var contenu = $(this).html(); // recup contenu
             console.log(etat); // récupère l'état (mode édition ou mode normal)
-            if (etat === "mode normal") return;
+            if (etat === "mode normal") return; // en mode normal, il est impossible de modifier un P
             var jTa = $("<textarea>")
                 .val(contenu)
                 .data("contenuInitial", contenu);
@@ -90,27 +94,24 @@
             jTa.focus(); // .select();
         });
 
-        // valid modif
+        // Validation des modifications lorsque l'on appuie sur entrée
         $(document).on("keydown",
             "#contenu textarea",
             function (contexte) {
-                // quelle est la touche appuyée ??
-                // en JQuery, tous les gestionnaires d'evenements
-                // sont destinataires d'un objet event en param.
-                // prop code ascii de la touche : code vaudra "Enter"
-                if (contexte.which != 13) return;
+                // le code ASCII de la touche Enter est 13
+                if (contexte.which != 13) return; // Ainsi, si une autre touche qu'entrée est saisie, il ne se passera rien
                 if (etat === "mode normal") {
                     $("#contenu textarea").each(function () {
                         // Cas où la personne modifie le P en mode édition, mais avant de valider, il repasse en mode normal
-                        // dans cecas, il faut procéder à une annulation des modifications
+                        // dans ce cas, il faut procéder à une annulation des modifications
                         var contenu = $(this).data("contenuInitial");
                         var jPar = $("<p class='contenu'>").html(contenu); // prépa P
                         $(this).replaceWith(jPar); // insertion P
                     });
                 }
-                else {
+                else { // Cas par défaut : modification d'un P en mode édition
                     var contenu = $(this).val(); // recup contenu
-                    if (contenu === '') return false;
+                    if (contenu === '') return false; // on vérifie que le contenu n'est pas vide
                     var idRequest = $(this).parent().attr("id"); // attribut parent
                     var jPar = $("<p class='contenu'>").html(contenu); // prépa P
                     $(this).replaceWith(jPar); // insertion P
@@ -118,17 +119,14 @@
                 }
             });
 
-        // add paragraphe
+        // Ajout d'un paragraphe
+        // Uniquement possible en mode édiion
         $(document).on("click",
             ".add",
             function () {
                 // récupération du nombre de paragraphes
                 let numItems = $('.contenu').length;
                 order = parseInt(numItems) + 1;
-                //  gestionnaire d'évnt sur click sur btn +
-                // ici, $(this) dénote le bouton cliqué
-                // $(this).next() dénote donc le champ d'entrée texte
-                // $(this).next().val() est son contenu
                 // Récupération du contenu du champ texte
                 var contenu = 'Nouveau paragraphe';
                 $(this).next().val(""); // puis on le vide
@@ -147,14 +145,15 @@
                     jTa.focus();
                     $(".ajout").removeClass("ajout");
                     var id_article = $("#select").children(":selected").attr("id"); // id de l'article associé
-                    var id_paragraphe = data.id; // id de l'article créé
+                    var id_paragraphe = data.id; // id du paragraphe créé
+                    // Association du paragraphe et de l'article dans la base articles_paragraphes
                     $.getJSON("data.php?action=addPinA&id_article=" + id_article + "&id_paragraphe=" + id_paragraphe);
                 });
             });
 
-        // modification de paragraphe annulée
+        // Modification de paragraphe annulée via la touche Echap (code ASCII : 27)
         $(document).keyup(function (contexte) {
-            if (contexte.which != 27) return;
+            if (contexte.which != 27) return; // Si la touche saisie est autre qu'échap, il ne se passe rien
 
             // parcours de tous les textarea
             $("#contenu textarea").each(function () {
@@ -167,18 +166,20 @@
 
         });
 
-        // suppression P
+        // Suppression P
         $(document).on("click", ".croix", function () {
-            // fonction appelee lors d'un clic sur la croix
+            // fonction appelée lors d'un clic sur la croix
             // dans le div de contenu
-            if (etat === "mode normal") return; // en mode normal, impossible de supprimer un P
+            if (etat === "mode normal") return; // en mode normal, il est impossible de supprimer un P
             var idRequest = $(this).parent().attr("id"); // attribut parent
             console.log(idRequest);
-            $("#" + idRequest).remove();
+            $("#" + idRequest).remove(); // On supprime le paragraphe du DOM
+            // On supprime le paragraphe de la BDD
+            // Le paragraphe sera également supprimé dans la base articles_paragraphes
             $.getJSON("data.php?action=delP&id=" + idRequest);
         });
 
-        // sort P
+        // Permettre le drag&drop des paragraphes
         $("#contenu").sortable({
             handle: ".dragdrop",
             start: (event, ui) => {
@@ -192,7 +193,8 @@
                 $.getJSON("data.php?action=updateOrdre&id=" + ui.item[0].id + "&ordrearrive=" + order + "&ordredepart=" + ui.item.startPos);
             }
         });
-        // Function pour charger les paragraphes
+
+        // Fonction pour charger les paragraphes lorsqu'un clic sur un article est réalisé
         $(document).on("change",
             "#select",
             function () {
@@ -200,9 +202,9 @@
                 var id = $("#select").children(":selected").attr("id");
                 var i = 0;
                 // TODO : lorsqu'un P est créé, il apparait dans toutes les listes de P jusqu'à ce que la page soit actualisée, à corriger
-                $.getJSON("data.php?action=getPFromA&article=" + id, function (data) {
+                $.getJSON("data.php?action=getPFromA&article=" + id, function (data) { // Récupération dans la BDD des P associés à un article
                     console.log(data);
-                    for (i in data.paragraphes) {
+                    for (i in data.paragraphes) { // Affichage des tous les P associés à un article
                         $("#contenu").append('<div ordre=' + data.paragraphes[i].ordre + ' id=' + data.paragraphes[i].id + ' class="parag"><img src="updown.png" class="dragdrop" />  <p class="contenu">' + data.paragraphes[i].contenu + '</p><img src="croix.png" class="croix" /></div>');
                     }
                 });
@@ -210,7 +212,7 @@
 
             });
 
-        // Add article
+        // Ajour d'un article
         var jT = $("<input type='text' />");
         var jPlus = $("<input type='button'/>")
             .val("Ajouter article")
@@ -222,10 +224,13 @@
                     $(".ajout").attr('id', data.id);
                     $("#select").val(contenu).change(); // redirige directement sur l'article en question
                     // ajout du nom de l'article créé dans la liste déroulante,
-                    // permet par la suite de pouvoir ajouter un paragraphe sans problèmes car l'id de l'article sélectionné est accessible
+                    // permet par la suite de pouvoir ajouter un paragraphe sans problèmes (sans actualiser la page)
+                    // en effet, pour créer un P, il faut pouvoir avoir l'ID de l'article associé, ce qui est possible dans ce cas
                     $("#select").append('<OPTION id="' + data.id + '" selected><div><p class="contenu">' + contenu + '</p></div></OPTION>');
                 });
             });
+
+        // Ces 2 champs apparaissent à tout moment sur la page
         $("#contenu").before(jPlus); // insertion dans le DOM
         jPlus.after(jT); // ajout champ texte après le bouton
 
@@ -233,15 +238,16 @@
         $(document).on("click",
             ".edit",
             function () {
-                etat = "mode edition";
-                $('#contenu').append('<button class="add">ajouter paragraphe</button>');
+                etat = "mode edition"; // permet de situer dans quel état on se trouve
+                $('#contenu').append('<button class="add">ajouter paragraphe</button>'); // on peut ajouter un paragraphe uniquement en mode édition
                 $('#contenu').append('<button class="edit2">revenir au mode normal</button>');
             });
+
         // Mode normal
         $(document).on("click",
             ".edit2",
             function () {
-                etat = "mode normal";
+                etat = "mode normal"; // permet de situer dans quel état on se trouve
                 $('#contenu').append('<button class="edit">passer en mode edition</button>');
                 $('#contenu').children(".add").remove(); // on enlève le bouton ajouter paragraphe
                 // TODO : Enlever pointillés lors du passage de la souris sur les P (p:hover)
@@ -251,8 +257,6 @@
 </script>
 
 <body>
-
-<div id="contenu">
-</div>
-
+    <div id="contenu">
+    </div>
 </body>

@@ -36,14 +36,6 @@ if (isset($_GET["action"])) {
                 $data["feedback"] = "ok";
             }
 
-        case "delPinA" :
-            if (isset($_GET["id"])) $id = $_GET["id"];
-            if ($id) {
-                $SQL = "DELETE FROM articles_paragraphes WHERE id='$id'";
-                SQLUpdate($SQL);
-                $data["feedback"] = "ok";
-            }
-
         // id, contenu, ordre
         case "addP" :
             // Ajoute un P. et renvoie son identifiant
