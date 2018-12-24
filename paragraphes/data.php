@@ -6,28 +6,13 @@ include("config.php");
 // penser à maj le nom de la base et le mot de passe
 include("maLibSQL.pdo.php");
 
-/*
-http://.../data.php?action=updateP&id=2&contenu=test
-{"feedback":"ok","paragraphes":[]} 
-
-http://.../data.php?action=getP
-
-{"feedback":"ok","paragraphes":[{"id":"1","contenu":"premier","ordre":"1"},{"id":"2","contenu":"test","ordre":"2"},{"id":"3","contenu":"toto","ordre":"3"}]} 
-
-http://.../data.php?action=addP&ordre=3&contenu=toto
-{"feedback":"ok","paragraphes":[],"id":4} 
-
-http://.../data.php?action=delP&id=3
-{"feedback":"ok","paragraphes":[]} 
-*/
-
-
 $data["feedback"] = "ko";
 $data["paragraphes"] = array();
 if (isset($_GET["action"])) {
     switch ($_GET["action"]) {
 
         case "delP" :
+            // Supprime un P à partir de son identifiant
             if (isset($_GET["id"])) $id = $_GET["id"];
             if ($id) {
                 $SQL = "DELETE FROM paragraphes WHERE id='$id';
@@ -110,7 +95,7 @@ if (isset($_GET["action"])) {
         // break;
 
         case "getPFromA" :
-            // Renvoie tous les paragraphes de la base de données en fonction du paragraphe
+            // Renvoie tous les paragraphes de la base de données associé à l'article en question
             if (isset($_GET["article"])) $contenu = $_GET["article"];
 
             $SQL = "SELECT p.* FROM paragraphes p, articles a, articles_paragraphes ap WHERE p.id = ap.id_paragraphe AND ap.id_article = a.id AND a.id = '$contenu' ORDER BY ordre ASC";
@@ -120,7 +105,7 @@ if (isset($_GET["action"])) {
             break;
 
         case "getA" :
-            // Renvoie tous les paragraphes de la base de données
+            // Renvoie tous les articles de la base de données
             $SQL = "SELECT * FROM articles";
             $res = parcoursRs(SQLSelect($SQL));
             $data["feedback"] = "ok";
@@ -155,6 +140,7 @@ if (isset($_GET["action"])) {
             break;
 
         case "delA" :
+            // Supprime un Article via son identifiant
             if (isset($_GET["id"])) $id = $_GET["id"];
             if ($id) {
                 $SQL = "DELETE FROM articles WHERE id='$id'";
@@ -163,6 +149,8 @@ if (isset($_GET["action"])) {
             }
         // id_article, id_paragraphe
         case "addPinA" :
+            // Ajoute la paragraphe dans la table articles_paragraphes
+            // Permet d'associer le paragraphe à l'article
             if (isset($_GET["id_article"])) $id_article = $_GET["id_article"];
             if (isset($_GET["id_paragraphe"])) $id_paragraphe = $_GET["id_paragraphe"];
 
