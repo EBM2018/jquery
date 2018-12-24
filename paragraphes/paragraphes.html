@@ -209,7 +209,9 @@
                     }
                     if (data.paragraphes[0]) {
                         // siginie qu'il y a au moins 1 paragraphe dans l'article, donc que l'article n'est pas nouveau
+                        etat = "mode normal"; // permet de situer dans quel état on se trouve
                         $('#contenu').append('<button class="edit">passer en mode edition</button>');
+                        $('#contenu').children(".add").remove(); // on enlève le bouton ajouter paragraphe
                     }
                     else {
                         // L'article est nouveau, dans ce cas :
