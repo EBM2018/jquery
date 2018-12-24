@@ -208,11 +208,13 @@
                         $("#contenu").append('<div ordre=' + data.paragraphes[i].ordre + ' id=' + data.paragraphes[i].id + ' class="parag"><img src="updown.png" class="dragdrop" />  <p class="contenu">' + data.paragraphes[i].contenu + '</p><img src="croix.png" class="croix" /></div>');
                     }
                 });
-                $('#contenu').append('<button class="edit">passer en mode edition</button>');
-
+                // On passe directement en mode édition
+                etat = "mode edition"; // permet de situer dans quel état on se trouve
+                $('#contenu').append('<button class="add">ajouter paragraphe</button>'); // on peut ajouter un paragraphe uniquement en mode édition
+                $('#contenu').append('<button class="edit2">revenir au mode normal</button>');
             });
 
-        // Ajour d'un article
+        // Ajout d'un article
         var jT = $("<input type='text' />");
         var jPlus = $("<input type='button'/>")
             .val("Ajouter article")
@@ -239,6 +241,7 @@
             ".edit",
             function () {
                 etat = "mode edition"; // permet de situer dans quel état on se trouve
+                console.log(etat);
                 $('#contenu').append('<button class="add">ajouter paragraphe</button>'); // on peut ajouter un paragraphe uniquement en mode édition
                 $('#contenu').append('<button class="edit2">revenir au mode normal</button>');
             });
