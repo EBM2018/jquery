@@ -14,17 +14,17 @@
     }
 
     .edit, .edit2 {
-        position:absolute;
-        left:40%;
-        top:50%;
-        border:1px solid black;
+        position: absolute;
+        left: 40%;
+        top: 50%;
+        border: 1px solid black;
     }
 
     .add {
-        position:absolute;
-        left:42%;
-        top:55%;
-        border:1px solid black;
+        position: absolute;
+        left: 42%;
+        top: 55%;
+        border: 1px solid black;
     }
 
     #contenu textarea {
@@ -133,7 +133,7 @@
                 var Jdiv = $('<div class="ajout"><img src="updown.png" class="dragdrop" /><p class="contenu">' + contenu + '</p><img src="croix.png" class="croix" /></div>');
 
                 // on insère un nouveau P avec ce contenu
-                $("#contenu").append(Jdiv);
+                $(".paragr").append(Jdiv);
                 $.getJSON("data.php?action=addP&ordre=" + order + "&contenu=" + contenu, function (data) {
                     $(".ajout").attr('id', data.id);
                     var jTa = $("<textarea>")
@@ -180,7 +180,7 @@
         });
 
         // Permettre le drag&drop des paragraphes
-        $("#contenu").sortable({
+        $(".paragr").sortable({
             handle: ".dragdrop",
             start: (event, ui) => {
                 ui.item.startPos = ui.item.index();
@@ -188,7 +188,7 @@
             update: (event, ui) => {
                 // dans ce cas, le drag&drop est possible mais rien n'est enregistré dans la bdd si c'est en mode normal
                 // TODO : à améliorer, il faudrait désactiver la possibilité de bouger les P
-                if (etat === "mode normal") return; // en mode normal, le drag & drop est désactivé
+                // en mode normal, le drag & drop est désactivé
                 let order = ui.item.index();
                 $.getJSON("data.php?action=updateOrdre&id=" + ui.item[0].id + "&ordrearrive=" + order + "&ordredepart=" + ui.item.startPos);
             }
@@ -201,11 +201,15 @@
                 $('.parag').remove();
                 var id = $("#select").children(":selected").attr("id");
                 var i = 0;
-                // TODO : lorsqu'un P est créé, il apparait dans toutes les listes de P jusqu'à ce que la page soit actualisée, à corriger
                 $.getJSON("data.php?action=getPFromA&article=" + id, function (data) { // Récupération dans la BDD des P associés à un article
                     console.log(data);
+                    $(".paragr").empty();
+                    console.log($('.paragr').length);
+                    if ($('.paragr').length === 0) {
+                        $("#contenu").append('<div class="paragr"></div>');
+                    }
                     for (i in data.paragraphes) { // Affichage des tous les P associés à un article
-                        $("#contenu").append('<div ordre=' + data.paragraphes[i].ordre + ' id=' + data.paragraphes[i].id + ' class="parag"><img src="updown.png" class="dragdrop" />  <p class="contenu">' + data.paragraphes[i].contenu + '</p><img src="croix.png" class="croix" /></div>');
+                        $(".paragr").append('<div ordre=' + data.paragraphes[i].ordre + ' id=' + data.paragraphes[i].id + ' class="parag"><img src="updown.png" class="dragdrop" />  <p class="contenu">' + data.paragraphes[i].contenu + '</p><img src="croix.png" class="croix" /></div>');
                     }
                     if (data.paragraphes[0]) {
                         // siginie qu'il y a au moins 1 paragraphe dans l'article, donc que l'article n'est pas nouveau
@@ -227,7 +231,7 @@
         var jT = $("<input type='text' />");
         var jPlus = $("<input type='button'/>")
             .val("Ajouter article")
-            .click(function(){
+            .click(function () {
                 // Récupération du contenu du champ texte
                 var contenu = $(this).next().val();
                 $(this).next().val(""); // puis on le vide
@@ -269,6 +273,6 @@
 </script>
 
 <body>
-    <div id="contenu">
-    </div>
+<div id="contenu">
+</div>
 </body>
