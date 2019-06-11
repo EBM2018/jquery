@@ -73,13 +73,25 @@ if (isset($_GET["action"]))
 			// On indique l'id du paragraphe concerné, 
 			// ainsi que le nouveau numéro d'ordre 
 			if (isset($_GET["id"])) $id = $_GET["id"];
-			if (isset($_GET["ordre"])) $ordre = $_GET["ordre"];
+			if (isset($_GET["arrivee"])) $arrivee = $_GET["arrivee"];
+			if (isset($_GET["depart"])) $depart = $_GET["depart"];
 
-			$SQL = "SELECT id FROM paragraphes WHERE ordre = '$ordre'"; 
+			$SQL = "SELECT id FROM paragraphes WHERE ordre = '$arrivee'"; 
 			if (SQLGetChamp($SQL)) {
 				// Il peut s'agir d'un numéro d'ordre qui est déjà utilisé
 				// On va décaler les ordres des paragraphes existants après
 				// TODO: SEULEMENT si c'est le CAS (doit être inutile ?)
+				if ($arrivee > $depart) {
+					$SQL = "UPDATE paragraphes SET ordre = ordre - 1
+							WHERE ordre <= '$arrivee' AND ordre > '$depart'";
+					SQLUpdate($SQL);
+				} else {
+					$SQL = "UPDATE paragraphes SET ordre = ordre + 1
+							WHERE ordre >= '$arrivee' AND ordre < '$depart'";
+					SQLUpdate($SQL);
+				}
+
+				// changement de l'ordre du paragraphe concerné				
 				$SQL = "UPDATE paragraphes SET ordre = ordre+1 
 							WHERE ordre >= '$ordre'"; 
 				SQLUpdate($SQL);

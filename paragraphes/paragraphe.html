@@ -80,6 +80,7 @@
                     $(this).next().val(""); // puis on le vide
                     var Jdiv = $('<div class="ajout"><p class="contenu">' + contenu + '</p><img src="croix.png" class="croix" /></div>');
                     $("#contenu").prepend(Jdiv);
+                                        
                     // on insère un nouveau P avec ce contenu
                     //var jNextP = jP.clone();
                     //if (contenu) jNextP.html(contenu);
@@ -91,7 +92,7 @@
                         var jTa = $("<textarea>")
                             .val(contenu)
                             .data("contenuInitial", contenu);
-                        // prépa txtareas
+                            // prépa txtareas
                         // AJOUT d'une méta-donnée
                         //$(".ajout .contenu").replaceWith(jTa); // insertion txtarea
                         //jTa.focus();
@@ -109,7 +110,7 @@
             // 2)  Passage en mode édition des P. insérés
             // clic => le P. se transforme en textarea avec le mm contenu
             // "ENTREE" => le textarea redevient un P. avec le mm contenu
-
+            $("#contenu p").droppable();
             // Réagir aux clicks sur les P. (y compris futurs !)
             $(document).on("click", "#contenu p", function () {
                 // fonction appelee lors d'un clic sur un P
@@ -185,6 +186,17 @@
         console.log(idRequest);
         $("#" + idRequest).remove();
         $.getJSON("data.php?action=delP&id=" + idRequest);
+    });
+
+    $(".paragr").sortable({
+        handle: ".dragdrop",
+        start: (event, ui) => {
+            ui.item.starPos = ui.item.index();
+        },
+        update: (event, ui) => {
+            let ordre = ui.item.index();
+            $.getJSON("data.php?action=updateOrdre&id=" + ui.item[0].id + "&arrivee=" + ordre + "&depart=" + ui.item.startPos)
+        }
     });
 
 
